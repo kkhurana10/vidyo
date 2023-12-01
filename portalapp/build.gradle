@@ -11,7 +11,7 @@ java {
 	sourceCompatibility = '17'
 }
 
-ext.jaxwsSourceDir = "D:/portalapp/src/main/java/"
+ext.jaxwsSourceDir = "${buildDir}/generated/sources"
 
 configurations {
 	jaxws
@@ -55,7 +55,7 @@ sourceSets {
 }
 
 compileJava {
-  dependsOn wsimport
+  //dependsOn wsimport
 }
 
 dependencies {
