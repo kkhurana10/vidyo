@@ -4,7 +4,6 @@ import java.sql.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +21,7 @@ import io.micrometer.common.util.StringUtils;
 @RestController
 @RequestMapping("/portal-app")
 public class PortalAppController {
-	
+
 	@Autowired
 	private SoapClient client;
 
@@ -30,12 +29,13 @@ public class PortalAppController {
 	private RoomService roomService;
 
 	@PostMapping("/createScheduledRoom")
-	public CreateScheduledRoomResponse createScheduledRoom(@RequestBody CreateScheduledRoomRequest request, @PathVariable("roomName") String roomName) {
+	public CreateScheduledRoomResponse createScheduledRoom(@RequestBody CreateScheduledRoomRequest request) {
 		CreateScheduledRoomResponse response = new CreateScheduledRoomResponse();
 		response = client.createScheduledRoom(request);
-		if (StringUtils.isNotEmpty(response.getRoomURL())) {
+		String roomName = "";
+		if (StringUtils.isNotEmpty(response.getRoomURL()) && response.getRoom() != null) {
 			Room room = new Room();
-			
+
 			room.setRoomName(roomName);
 			room.setRoomKey(response.getRoomURL().split("/join/")[1]);
 			room.setRoomURL(response.getRoomURL());
@@ -46,15 +46,15 @@ public class PortalAppController {
 			room.setOwnerEntityID(response.getRoom().getOwnerEntityID());
 			room.setOwnerName(response.getRoom().getOwnerName());
 			room.setUserDate(new Date(System.currentTimeMillis()));
-			
+
 			roomService.save(room);
 		}
 		return response;
 	}
-	
+
 	@GetMapping("/searchRooms")
 	public Room searchRoomByRoomName(@RequestParam(value = "roomName") String roomName) {
-		Room room =  roomService.searchRoomByRoomName(roomName);
+		Room room = roomService.searchRoomByRoomName(roomName);
 		return room;
 	}
 }
