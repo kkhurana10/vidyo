@@ -17,6 +17,8 @@ import com.vidyo.portalapp.service.RoomService;
 import com.vidyo.portalapp.wsdl.CreateScheduledRoomRequest;
 import com.vidyo.portalapp.wsdl.CreateScheduledRoomResponse;
 
+import io.micrometer.common.util.StringUtils;
+
 @RestController
 @RequestMapping("/portal-app")
 public class PortalAppController {
@@ -31,21 +33,22 @@ public class PortalAppController {
 	public CreateScheduledRoomResponse createScheduledRoom(@RequestBody CreateScheduledRoomRequest request, @PathVariable("roomName") String roomName) {
 		CreateScheduledRoomResponse response = new CreateScheduledRoomResponse();
 		response = client.createScheduledRoom(request);
-		Room room = new Room();
-		
-		room.setRoomName(roomName);
-		room.setRoomKey(response.getRoomURL().split("/join/")[1]);
-		room.setRoomURL(response.getRoomURL());
-		room.setPortal(response.getRoomURL().split("/join/")[0]);
-		room.setEntityID(response.getRoom().getEntityID());
-		room.setExtension(response.getExtension());
-		room.setPin(response.getPin());
-		room.setOwnerEntityID(response.getRoom().getOwnerEntityID());
-		room.setOwnerName(response.getRoom().getOwnerName());
-		room.setUserDate(new Date(System.currentTimeMillis()));
-		
-		roomService.save(room);
-		
+		if (StringUtils.isNotEmpty(response.getRoomURL())) {
+			Room room = new Room();
+			
+			room.setRoomName(roomName);
+			room.setRoomKey(response.getRoomURL().split("/join/")[1]);
+			room.setRoomURL(response.getRoomURL());
+			room.setPortal(response.getRoomURL().split("/join/")[0]);
+			room.setEntityID(response.getRoom().getEntityID());
+			room.setExtension(response.getExtension());
+			room.setPin(response.getPin());
+			room.setOwnerEntityID(response.getRoom().getOwnerEntityID());
+			room.setOwnerName(response.getRoom().getOwnerName());
+			room.setUserDate(new Date(System.currentTimeMillis()));
+			
+			roomService.save(room);
+		}
 		return response;
 	}
 	
