@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vidyo.moderatorapp.client.SoapClient;
 import com.vidyo.moderatorapp.entity.Room;
-import com.vidyo.moderatorapp.service.RoomService;
+import com.vidyo.moderatorapp.repository.RoomRepository;
 import com.vidyo.moderatorapp.wsdl.DisconnectConferenceAllRequest;
 import com.vidyo.moderatorapp.wsdl.DisconnectConferenceAllResponse;
 import com.vidyo.moderatorapp.wsdl.LogInRequest;
@@ -29,7 +29,7 @@ public class ModeratorAppController {
 	private SoapClient client;
 
 	@Autowired
-	private RoomService roomService;
+	private RoomRepository roomRepository;
 
 	@GetMapping("/getLogin")
 	public LogInResponse getLogin(@RequestBody LogInRequest request) {
@@ -44,6 +44,13 @@ public class ModeratorAppController {
 	@GetMapping("/getActiveRooms/{date}")
 	public List<Room> findByUserDate(@PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 		Date dt = Date.valueOf(date);
-		return roomService.findByUserDate(dt);
+		List<Room> r = roomRepository.findByUserDate(dt);
+		return r;
 	}
+	
+//	@GetMapping("/getActiveRoom/{id}")
+//	public Room findById(@PathVariable("id") Integer id) {
+//		Optional<Room> r = roomRepository.findById(id);
+//		return r.get();
+//	}
 }

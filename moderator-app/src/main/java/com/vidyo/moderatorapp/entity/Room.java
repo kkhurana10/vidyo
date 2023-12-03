@@ -49,7 +49,7 @@ public class Room implements Serializable {
 	private String extension;
 
 	@Column(name = "pin")
-	private Integer pin;
+	private String pin;
 
 	@Column(name = "owner_entity_id")
 	private String ownerEntityID;
@@ -57,7 +57,7 @@ public class Room implements Serializable {
 	@Column(name = "owner_name")
 	private String ownerName;
 
-	@Column(name = "user_date")
-	private Date userDate;
+	@Column(name = "user_date_time")
+	private Date userDateTime;
 
 }

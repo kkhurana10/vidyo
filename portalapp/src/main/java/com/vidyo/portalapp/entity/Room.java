@@ -23,7 +23,7 @@ public class Room implements Serializable {
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2836344411351326354L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "room_id")
@@ -57,94 +57,7 @@ public class Room implements Serializable {
 	@Column(name = "owner_name")
 	private String ownerName;
 
-	@Column(name = "user_date")
-	private Date userDate;
+	@Column(name = "user_date_time")
+	private Date userDateTime;
 
-	public Integer getRoomID() {
-		return roomID;
-	}
-
-	public void setRoomID(Integer roomID) {
-		this.roomID = roomID;
-	}
-
-	public String getRoomName() {
-		return roomName;
-	}
-
-	public void setRoomName(String roomName) {
-		this.roomName = roomName;
-	}
-
-	public String getRoomKey() {
-		return roomKey;
-	}
-
-	public void setRoomKey(String roomKey) {
-		this.roomKey = roomKey;
-	}
-
-	public String getRoomURL() {
-		return roomURL;
-	}
-
-	public void setRoomURL(String roomURL) {
-		this.roomURL = roomURL;
-	}
-
-	public String getPortal() {
-		return portal;
-	}
-
-	public void setPortal(String portal) {
-		this.portal = portal;
-	}
-
-	public String getEntityID() {
-		return entityID;
-	}
-
-	public void setEntityID(String entityID) {
-		this.entityID = entityID;
-	}
-
-	public String getExtension() {
-		return extension;
-	}
-
-	public void setExtension(String extension) {
-		this.extension = extension;
-	}
-
-	public String getPin() {
-		return pin;
-	}
-
-	public void setPin(String pin) {
-		this.pin = pin;
-	}
-
-	public String getOwnerEntityID() {
-		return ownerEntityID;
-	}
-
-	public void setOwnerEntityID(String ownerEntityID) {
-		this.ownerEntityID = ownerEntityID;
-	}
-
-	public String getOwnerName() {
-		return ownerName;
-	}
-
-	public void setOwnerName(String ownerName) {
-		this.ownerName = ownerName;
-	}
-
-	public Date getUserDate() {
-		return userDate;
-	}
-
-	public void setUserDate(Date userDate) {
-		this.userDate = userDate;
-	}
 }
