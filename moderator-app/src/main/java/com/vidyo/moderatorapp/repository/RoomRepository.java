@@ -11,10 +11,8 @@ import com.vidyo.moderatorapp.entity.Room;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Integer> {
 
-	List<Room> findByUserDate(Date userDate);
-	
-//	Optional<Room> findByUserDate(Date userDate);
-//    @Query(value = "SELECT R FROM Room R WHERE R.userDate = :date")
-//    List<Room> findByUserDate(@Param("date") Date date);
+	List<Room> findByUserDateTime(Date userDateTime);
+
+	Room findByRoomName(String roomName);
 
 }

@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "room", schema = "vidyo")
+@Table(name = "room")
 public class Room implements Serializable {
 
 	/**
