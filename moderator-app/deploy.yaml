@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: moderator-app
+spec:
+  selector:
+    matchLabels:
+      app: moderator-app
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: moderator-app
+    spec:
+      containers:
+       - name: moderator-app
+         image: kkhurana10/vidyoportalmoderator:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: moderator-app
+spec:
+  type: LoadBalancer
+  selector:
+    app: moderator-app
+  ports:
+  - port: 80
+    targetPort: 8080
