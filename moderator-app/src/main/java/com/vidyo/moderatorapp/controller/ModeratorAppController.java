@@ -6,15 +6,21 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vidyo.moderatorapp.client.SoapClient;
+import com.vidyo.moderatorapp.dto.RoomDto;
 import com.vidyo.moderatorapp.entity.Room;
 import com.vidyo.moderatorapp.repository.RoomRepository;
 import com.vidyo.moderatorapp.wsdl.CreateScheduledRoomRequest;
@@ -27,7 +33,10 @@ import com.vidyo.moderatorapp.wsdl.LogInResponse;
 import io.micrometer.common.util.StringUtils;
 
 @RestController
-@RequestMapping("/moderator-app")
+@RequestMapping("/")
+@CrossOrigin(maxAge = 3600, allowedHeaders = "*", methods = { RequestMethod.HEAD, RequestMethod.DELETE,
+		RequestMethod.GET, RequestMethod.HEAD, RequestMethod.OPTIONS, RequestMethod.PATCH, RequestMethod.POST,
+		RequestMethod.PUT, RequestMethod.TRACE })
 public class ModeratorAppController {
 
 	@Autowired
@@ -42,7 +51,10 @@ public class ModeratorAppController {
 	}
 
 	@PostMapping("/disconnectAll")
-	public DisconnectConferenceAllResponse disconnectAll(@RequestBody DisconnectConferenceAllRequest request) {
+	public DisconnectConferenceAllResponse disconnectAll(@RequestParam(value = "entitytId") String entitytId) {
+		DisconnectConferenceAllRequest request = new DisconnectConferenceAllRequest();
+		request.setConferenceID(entitytId);
+
 		return client.disconnectAll(request);
 	}
 
@@ -52,15 +64,15 @@ public class ModeratorAppController {
 		List<Room> r = roomRepository.findByUserDateTime(dt);
 		return r;
 	}
-	
+
 	@PostMapping("/searchRooms")
-	public Room searchRoomByRoomName(@RequestParam(value = "roomName") String roomName) {
+	public String searchRoomByRoomName(@RequestParam(value = "roomName") String roomName) {
+		RoomDto roomDto = new RoomDto();
 		Room room = roomRepository.findByRoomName(roomName);
-		if(room == null ) {
+		if (room == null) {
 			CreateScheduledRoomRequest request = new CreateScheduledRoomRequest();
 			request.setSetPIN(true);
 			request.setReturnRoomDetails(true);
-			
 			CreateScheduledRoomResponse response = new CreateScheduledRoomResponse();
 			response = client.createScheduledRoom(request);
 			if (StringUtils.isNotEmpty(response.getRoomURL()) && response.getRoom() != null) {
@@ -75,10 +87,20 @@ public class ModeratorAppController {
 				room.setOwnerEntityID(response.getRoom().getOwnerEntityID());
 				room.setOwnerName(response.getRoom().getOwnerName());
 				room.setUserDateTime(new Date(System.currentTimeMillis()));
-				
 				roomRepository.save(room);
+
 			}
 		}
-		return room;
+		roomDto.setExtension(room.getExtension());
+		roomDto.setRoomUrl(room.getRoomURL());
+		roomDto.setPin(room.getPin());
+		ObjectMapper om = new ObjectMapper();
+		String roomContent = "";
+		try {
+			roomContent = om.writeValueAsString(roomDto);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		return roomContent;
 	}
 }
