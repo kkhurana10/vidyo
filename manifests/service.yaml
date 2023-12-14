@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: moderator-app
-  namespace: namespace-workflow-1702549467227
+  namespace: namespace-workflow-1702552041339
 spec:
   type: LoadBalancer
   selector:
