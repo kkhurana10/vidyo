@@ -4,7 +4,7 @@ metadata:
   name: moderator-app
   labels:
     app: moderator-app
-  namespace: namespace-workflow-1702549467227
+  namespace: namespace-workflow-1702552041339
 spec:
   replicas: 1
   selector:
@@ -17,6 +17,6 @@ spec:
     spec:
       containers:
         - name: moderator-app
-          image: acrworkflow1702549467227.azurecr.io/image-workflow-1702549467227:latest
+          image: acrworkflow1702552041339.azurecr.io/image-workflow-1702552041339:latest
           ports:
             - containerPort: 8080
